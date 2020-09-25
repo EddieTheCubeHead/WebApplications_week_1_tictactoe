@@ -1,0 +1,47 @@
+body {
+  font-family: sans-serif;
+}
+
+* {
+  text-align: center;
+}
+
+#game {
+  align-content: center;
+  overflow: auto;
+  margin: 100px auto;
+}
+
+#board {
+  align-self: center;
+  display: grid;
+  grid-row-gap: 6px;
+  grid-column-gap: 6px;
+  border: 1px solid black;
+  border-collapse: collapse;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+#board .cell {
+  width: 40px;
+  height: 40px;
+  font-size: 30px;
+  text-align: center;
+  border: 1px solid black;
+}
+
+#board .cell:hover {
+  cursor: pointer;
+  background: red;
+}
+
+#reset_button {
+  align-self: center;
+  margin-left: 100px auto;
+  margin-right: 100px auto;
+}
+
+#reset_button:hover {
+  cursor: pointer;
+}
