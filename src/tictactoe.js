@@ -23,10 +23,8 @@ function create_board() {
     board_display.deleteRow(0);
   }
 
-  for (var i = 0; i < 7; i++) {
+  for (var i = 0; i < 5; i++) {
     board.push([
-      marking.Empty,
-      marking.Empty,
       marking.Empty,
       marking.Empty,
       marking.Empty,
@@ -37,6 +35,7 @@ function create_board() {
 
   document.getElementById("turn_indicator").innerHTML =
     "Player 1 (X), please begin.";
+  document.getElementById("reset_button").innerHTML = "Reset board";
   game_over = false;
   current_player = 1;
 
@@ -237,8 +236,8 @@ function check_victory(row, column) {
     board[row][column] === get_current_player_mark()
   ) {
     longest++;
-    column++;
-    row--;
+    column--;
+    row++;
   }
 
   column = +start_column + +1;
@@ -252,8 +251,8 @@ function check_victory(row, column) {
     board[row][column] === get_current_player_mark()
   ) {
     longest++;
-    column--;
-    row++;
+    column++;
+    row--;
   }
 
   if (longest >= 5) {
@@ -270,6 +269,9 @@ function declare_victory() {
     " (" +
     get_current_player_mark() +
     "), you win!";
+
+  alert("Player " + current_player + " won!");
+  document.getElementById("reset_button").innerHTML = "Play again";
 }
 
 // Enabling the reset functionality
