@@ -4,6 +4,8 @@ var board_display = document.getElementById("board");
 var game_over = false;
 var current_player = 1;
 var board = [];
+var clock = 0; // milliseconds
+var timer = false;
 
 // Creating markers for X, O and empty
 // Could just use strings but this in my opinion serves as good practice
@@ -17,6 +19,10 @@ Object.freeze(marking);
 
 // A function to create a new board to start a game
 function create_board() {
+  if (timer) {
+    reset_clock();
+  }
+
   board = [];
 
   while (board_display.rows.length > 0) {
@@ -61,14 +67,23 @@ function draw_board() {
         });
       } else {
         board_display.rows[row].cells[column].innerHTML = board[row][column];
+        board_display.rows[row].cells[
+          column
+        ].style.background = get_player_color(board[row][column]);
       }
     }
   }
-  board_display.style.width = board[0].length * 40 + "px";
+  board_display.style.width = board[0].length * 62 + "px";
 }
 
 // A function to process clicks on the board
 function on_cell_click(id) {
+  if (!timer) {
+    timer = setInterval(tick_clock, 50);
+  } else {
+    clock = 0;
+  }
+
   var row = id.split(";")[0];
   var column = id.split(";")[1];
 
@@ -87,6 +102,9 @@ function on_cell_click(id) {
     column < board[0].length - 3
   ) {
     board_display.rows[row].cells[column].innerHTML = board[row][column];
+    board_display.rows[row].cells[column].style.background = get_player_color(
+      board[row][column]
+    );
   } else {
     while (row < 3) {
       board.unshift(Array(board[0].length).fill(marking.Empty));
@@ -112,6 +130,17 @@ function on_cell_click(id) {
 
 function get_current_player_mark() {
   return current_player % 2 === 0 ? marking.O : marking.X;
+}
+
+function get_player_color(marking) {
+  switch (marking) {
+    case "X":
+      return "rgb(124, 252, 0)";
+    case "O":
+      return "rgb(250, 128, 114)";
+    default:
+      return "rgb(255, 255, 255)";
+  }
 }
 
 function update_current_player() {
@@ -262,6 +291,7 @@ function check_victory(row, column) {
 }
 
 function declare_victory() {
+  reset_clock();
   game_over = true;
   document.getElementById("turn_indicator").innerHTML =
     "Congratulations player " +
@@ -272,6 +302,23 @@ function declare_victory() {
 
   alert("Player " + current_player + " won!");
   document.getElementById("reset_button").innerHTML = "Play again";
+}
+
+function tick_clock() {
+  clock += 50;
+  if (clock >= 10000) {
+    clock = 0;
+    update_current_player();
+  }
+  var percentage = (clock / 10000) * 100;
+  document.getElementById("timer_progress").style.width = percentage + "%";
+}
+
+function reset_clock() {
+  clearInterval(timer);
+  timer = false;
+  clock = 0;
+  document.getElementById("timer_progress").style.width = "0%";
 }
 
 // Enabling the reset functionality
